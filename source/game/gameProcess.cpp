@@ -4,9 +4,13 @@ void handle_game_loss();
 void handle_card_reveal(int card_value);
 void handle_game_win();
 
+/**
+ * Checks and updates the game state after a card is turned. 
+ * This includes checking for win/loss conditions and updating scores and levels accordingly.
+ */
 void update_game() {
     if ((g_state.game_state == GAME_STATE_LOSE || g_state.game_state == GAME_STATE_WIN)) {
-        if(!--g_state.freeze) {
+        if(!g_state.freeze) {
             if(g_state.game_state == GAME_STATE_WIN) {
                 g_state.total_score += g_state.current_score;
                 g_state.current_score = 1;
@@ -20,7 +24,7 @@ void update_game() {
 
             init_game_status();
             g_state.game_state = GAME_STATE_PLAYING;
-            g_state.level_changed = 1; // Putting it now to update the graphics later
+            g_state.level_changed = 1; // Setting it now to update the graphics later
         }
     }
     if (!g_state.card_turned || g_state.board_status[g_state.cursor_row][g_state.cursor_col]) {
@@ -36,14 +40,21 @@ void update_game() {
     }
 }
 
+/**
+ * Handles the game loss scenario by updating the game state, adjusting the current level, and setting the freeze duration for the loss animation.
+ */
 void handle_game_loss() {
     g_state.game_state = GAME_STATE_LOSE;
     g_state.game_state_changed = 1;
     g_state.current_level = g_state.current_level > MIN_LEVEL ? g_state.current_level - 1 : MIN_LEVEL;
-    g_state.freeze = FREEZE_DURATION;
+    g_state.freeze = true;
     g_state.reveal_board = 1;
 }
 
+/**
+ * Handles the card reveal scenario by updating the current score based on the card value, checking for win conditions, and updating the game state accordingly.
+ * @param card_value The value of the card that was revealed.
+ */
 void handle_card_reveal(int card_value) {
     g_state.current_score *= card_value;
     g_state.score_changed = 1;
@@ -54,10 +65,13 @@ void handle_card_reveal(int card_value) {
     }
 }
 
+/**
+ * Handles the game win scenario by updating the game state, adjusting the current level, and setting the freeze duration for the win animation.
+ */
 void handle_game_win() {
     g_state.game_state = GAME_STATE_WIN;
     g_state.game_state_changed = 1;
     g_state.current_level = g_state.current_level < MAX_LEVEL ? g_state.current_level + 1 : MAX_LEVEL;
-    g_state.freeze = FREEZE_DURATION; 
+    g_state.freeze = true; 
     g_state.reveal_board = 1;
 }

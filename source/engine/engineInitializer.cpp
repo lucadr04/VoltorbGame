@@ -3,7 +3,9 @@
 #include <nds.h>
 #include <maxmod9.h>
 
-/** Initialize the two main screens systems and buffers */
+/** 
+ * Initialize the two main screens systems and buffers and enables sound 
+ */
 void init_system(void) {
     nitroFSInit(NULL); 
     NF_SetRootFolder("NITROFS");
@@ -26,7 +28,9 @@ void init_system(void) {
     mmInitDefault("nitro:/soundbank.bin");
 }
 
-/** Initialize the ram, with the backgrounds and the sprites */
+/** 
+ * Initialize the ram with the necessary backgrounds and the sprites 
+ */
 void init_ram(void) {
     NF_Load8bitsBg("GameTable", 0);
     NF_Copy8bitsBuffer(1, 0, 0);

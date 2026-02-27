@@ -4,8 +4,11 @@
 #include "../game/gameStatus.h"
 #include "gameMedia.h"
 #include "gameGraphic.h"
-#include "gameSfx.h" // SFX Follow graphic events, so... sfx is handled here
+#include "gameSfx.h" // SFX Follow graphic events, for that reason sfx is handled here
 
+/**
+ * Screens update. 
+ */
 void render_graphics() {
     NF_SpriteOamSet(0);
     NF_SpriteOamSet(1);
@@ -14,13 +17,20 @@ void render_graphics() {
     oamUpdate(&oamMain);
 }
 
+/**
+ * Waits for a given number of Vertical Blanks.
+ * @param wait The number of Vertical Blanks to wait for.
+ */
 void waitVB(int wait) {
     for(int i=0; i<wait; i++) {
         render_graphics();
     }  
 }
 
-void turnAllCards() {
+/**
+ * Reveals all cards on the board.
+ */
+void turn_all_cards() {
     for (int r = 0; r < BOARD_SIZE; r++) {
         for (int c = 0; c < BOARD_SIZE; c++) {
             int id = r*BOARD_SIZE + c;
@@ -30,7 +40,9 @@ void turnAllCards() {
     }
 }
 
-
+/**
+ * Moves the cursor sprite to the current position
+ */
 void handle_cursor_movement() {
     if (g_state.cursor_moved) {
         NF_MoveSprite(1, 50, 
@@ -40,6 +52,9 @@ void handle_cursor_movement() {
     }
 }
 
+/**
+ * Handles the updates of the marker selector sprite based on the current selected marker.
+ */
 void handle_marker_updates() {
     if (g_state.markers_changed) {
         static int oldMarker = MARKER_NONE;
@@ -56,17 +71,23 @@ void handle_marker_updates() {
     }
 }
 
+/**
+ * Hadles the updates of the score and record sprites based on the current values.
+ */
 void handle_score_updates() {
     if (g_state.score_changed) {
-        updateScore();
+        update_score();
         g_state.score_changed = false;
     }
     if (g_state.total_changed) {
-        updateRecord();
+        update_record();
         g_state.total_changed = false;
     }
 }
 
+/**
+ * Shows on screen the win/loss logo and plays the corresponding sound effect.
+ */
 void handle_level_transitions() {
     if(g_state.game_state_changed) {
         if(g_state.game_state == GAME_STATE_WIN) {
@@ -86,6 +107,9 @@ void handle_level_transitions() {
     }
 }
 
+/**
+ * Handles the card interactions, both revealing and marking, based on the current game state.
+ */
 void handle_card_operations() {
     if (g_state.card_turned) {
         reveal_card();
@@ -98,6 +122,9 @@ void handle_card_operations() {
     }
 }
 
+/**
+ * Reveals the selected card, and if it is a bomb, plays the explosion sound effect.
+ */
 void reveal_card() {
     if (!g_state.board_status[g_state.cursor_row][g_state.cursor_col]) {
         int card_id = g_state.cursor_row * BOARD_SIZE + g_state.cursor_col;
@@ -118,6 +145,9 @@ void reveal_card() {
     }
 }
 
+/**
+ * Toggles the marker on the selected card.
+ */
 void toggle_card_marker() {
     if (!g_state.board_status[g_state.cursor_row][g_state.cursor_col]) {
         int mask = 1 << g_state.selected_marker;
@@ -128,31 +158,39 @@ void toggle_card_marker() {
     }
 }
 
-void updateScore() {
+/**
+ * updates the score sprites.
+ */
+void update_score() {
     char buf[16];
-    // Score corrente
     play_coin();
-    snprintf(buf, sizeof(buf), "%06d", g_state.current_score); // sempre 6 cifre
+    snprintf(buf, sizeof(buf), "%06d", g_state.current_score); 
     for (int i = 0; i < 6; i++) {
         int digit = buf[i] - '0';
         NF_SpriteFrame(0, 100 + i, digit);
     }
 }
 
-void updateRecord() {
+/**
+ * updates the record sprites.
+ */
+void update_record() {
     char buf[16];
     // Record corrente
     for(int i=0; i<5; i++) {
         play_coin();
     }
-    snprintf(buf, sizeof(buf), "%06d", g_state.total_score); // sempre 6 cifre
+    snprintf(buf, sizeof(buf), "%06d", g_state.total_score); 
     for (int i = 0; i < 6; i++) {
         int digit = buf[i] - '0';
         NF_SpriteFrame(0, 106 + i, digit);
     }
 }
 
-void hideAllCards() {
+/**
+ * Turns all cards face down and plays the shuffle sound
+ */
+void hide_all_cards() {
     for (int r = 0; r < BOARD_SIZE; r++) {
         for (int c = 0; c < BOARD_SIZE; c++) {
             int id = 25+r*BOARD_SIZE + c;
@@ -179,7 +217,10 @@ void hideAllCards() {
     }
 }
 
-void revealBoard() {
+/**
+ * Reveals all cards on the board with an animation, and plays the shuffle sound effect.
+ */
+void reveal_board() {
     waitVB(200);  
 
     for (int r = 0; r < BOARD_SIZE; r++) {

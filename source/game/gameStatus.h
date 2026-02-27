@@ -1,6 +1,16 @@
 #ifndef STATE_H
 #define STATE_H
 
+/**
+ * @file gameStatus.h
+ * @brief Defines the shared game state structure and related constants for the Voltorb Flip game.
+ *
+ * This header file contains the definition of the SharedGameState structure, which holds 
+ * all the relevant information about the current state of the game, including input states, 
+ * game board status, score, and various flags for managing updates. 
+ * It also defines constants for board size, initial bombs, levels, and marker types.
+ */
+
 #include <nds.h>
 
 #define BOARD_SIZE 5
@@ -8,7 +18,6 @@
 #define INITIAL_MULTIPLIERS 4
 #define MAX_LEVEL 9
 #define MIN_LEVEL 1
-#define FREEZE_DURATION 100
 
 typedef enum {
     GAME_STATE_PLAYING,
@@ -37,7 +46,7 @@ typedef struct {
 
     // === DELAY HANDLERS === -> those are managed by whoever needs them game process
     int keys_input_delay;
-    int freeze;
+    bool freeze;
 
     // === GAME STATE === -> those are managed by game process
     int board_content[BOARD_SIZE][BOARD_SIZE];  // 0=bomb, 1-3=values
@@ -58,7 +67,7 @@ typedef struct {
     bool score_changed;
     bool total_changed;
     bool level_changed;
-    bool card_turned; // the card aimed by the cursor is turned. This is both used by process and graphic
+    bool card_turned; 
     bool card_marked;
     bool game_state_changed;
     bool reveal_board;

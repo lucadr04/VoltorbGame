@@ -1,3 +1,4 @@
+// MaxMod9 Soundbank header file
 #define MOD_CASINO	0
 #define SFX_COIN	16
 #define SFX_EXPLOSION	17

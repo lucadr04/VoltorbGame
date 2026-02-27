@@ -3,6 +3,9 @@
 // The ONE global state instance
 SharedGameState g_state;
 
+/**
+ * Initializes the default shared global state
+ */
 void init_shared_data(void) {
     // Zero everything
     memset(&g_state, 0, sizeof(SharedGameState));
@@ -17,7 +20,9 @@ void init_shared_data(void) {
     g_state.selected_marker = MARKER_NONE;
 }
 
-/** Initialize the game */
+/** 
+ * Initialize the game board and the helperers based on the current level. 
+ */
 void init_game_status(void) {
     int bombs = (int)(g_state.current_level/2) + INITIAL_BOMBS;
     g_state.cards_to_find = (int)(g_state.current_level/2) + INITIAL_MULTIPLIERS;

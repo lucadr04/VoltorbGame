@@ -9,9 +9,9 @@ void handle_card_operations();
 void reveal_card();
 void toggle_card_marker();
 void render_graphics();
-void updateScore();
-void updateRecord();
-void hideAllCards();
-void revealBoard();
+void update_score();
+void update_record();
+void hide_all_cards();
+void reveal_board();
 
 #endif // GRAPHIC_H

@@ -8,6 +8,11 @@
 #include "input/gameInput.h"
 #include "game/gameProcess.h"
 
+/**
+ * This is the main game cycle.
+ * It initializes all the necessary systems and data. 
+ * Then enters an infinite loop where it handles user input, updates the game state, and renders the graphics.
+ */
 int main(int argc, char **argv) {
     srand(time(NULL));
 

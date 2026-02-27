@@ -13,20 +13,31 @@ typedef enum {
     MARKERS
 } PressZone;
 
-int r; 
-int c;
 PressZone pressZone = OUT;
 
+/**
+ * Handles user input, both from the D-Pad and the touch screen, and updates the global game state accordingly.
+ */
 void handle_input(void) {
-    if(g_state.freeze) return; // Make unfreezing onclick
     scanKeys();
     g_state.keys_held = keysHeld();
     touchRead(&g_state.touch);
+
+    if(g_state.freeze) {
+        if (g_state.keys_held) {
+            g_state.freeze = false;
+        }
+        return;
+    }
 
     handle_touch();
     handle_dpad();
 }
 
+/**
+ * Handles the D-Pad input.
+ * It determines if the user is trying to move the cursor or interact with the cards, and updates the game accordingly.
+ */
 void handle_dpad() {
     if (!g_state.keys_held) {
         g_state.keys_input_delay = 0;
@@ -66,7 +77,13 @@ void handle_dpad() {
     }
 }
 
+/**
+ * Handles the touchscreen input.
+ * It determines if the touch is on the board or on the marker selection area, and updates the game accordingly.
+ */
 void handle_touch() {
+    int r; 
+    int c;
     if (!(g_state.keys_held & KEY_TOUCH)) {
         if(g_state.touch_active) {
             if(pressZone == BOARD) {

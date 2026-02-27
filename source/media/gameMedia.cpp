@@ -10,6 +10,10 @@ MarkerType oldMarker = MARKER_NONE;
 
 // grit-gba x.png -ftB -gb -Gb8 -fh! gTFF00FF
 // grit-gba GameTable.png UpperBg.png -ftB -fh! -gb -gu8 -gB8 -pu16 -pS -OGameTable.pal -gTFF00FF
+
+/**
+ * Initializes all the sprites for the game.
+ */
 void init_sprites() {
     // Cards
     for (int r = 0; r < BOARD_SIZE; r++) {
@@ -65,11 +69,14 @@ void init_sprites() {
     NF_SpriteFrame(1, 127, 0);
 }
 
+/**
+ * Initializes the game graphics (for the turn)
+ */
 void init_game_graphics() {
     oldMarker = MARKER_NONE;
     g_state.markers_changed = 1;
 
-    hideAllCards();
+    hide_all_cards();
 
     NF_SpriteFrame(1,127,0);
     NF_SpriteFrame(0,126,g_state.current_level);
@@ -89,6 +96,9 @@ void init_game_graphics() {
     NF_Copy8bitsBuffer(1,0,0);
 }
 
+/**
+ * Updates the graphics based on the current game state.
+ */
 void update_graphics() {
     if(g_state.level_changed) {
         init_game_graphics();
@@ -104,7 +114,7 @@ void update_graphics() {
     render_graphics();
 
     if(g_state.reveal_board) {
-        revealBoard();
+        reveal_board();
         g_state.reveal_board = 0;
     }
 }
